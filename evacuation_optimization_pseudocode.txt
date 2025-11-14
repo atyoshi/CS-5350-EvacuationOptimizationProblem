@@ -1,0 +1,50 @@
+START SIMULATION
+
+Set time = 0
+Count total people to evacuate
+Make a copy of where everyone starts
+Prepare a list for people "on the move"
+Prepare a list to track how crowded each hallway/stair is
+
+WHILE not everyone is evacuated AND there is enough time remaining:
+
+    STEP 1: CHECK WHO JUST ARRIVED
+       For every group currently moving:
+           If their arrival time has come:
+               - Take them off the "on the move" list
+               - Free up space on the path they used
+               - If they reached a SAFE ZONE:
+                     Add them to "Evacuated" count
+               - Otherwise:
+                     Add them to the room they just entered
+
+       If everyone is now safe - Done! All evacuees are safe!
+
+    STEP 2: SEND PEOPLE OUT FROM ROOMS
+       Did anyone move this round? - Not yet
+
+       For each room in our top-down order:
+           If there are people waiting in this room:
+               - Use Dijkstra to find the fastest safe path out
+               - Look at the first step: Room A -> Hallway B
+               - Find how many people can fit at the moment
+               - Send as many as possible (limited by space)
+
+               If we send anyone:
+                   - Mark that many as "on the move"
+                   - Note when they’ll arrive
+                   - Update: less people in room, more using the path
+                   - Say: "X people leaving Room A -> going to B"
+
+       If NO ONE moved AND no one is walking - Stop. No further movement possible.
+
+    STEP 3: MOVE TIME FORWARD
+       time = time + 1
+
+END SIMULATION
+
+RETURN:
+   - Total people saved
+   - Evacuation time
+   - Remaining Evacuees
+   
