@@ -271,7 +271,7 @@ if __name__ == "__main__":
     total_start_time = time.time()
     
     print("Displaying evacuation graph...")
-    visualize_graph(G, V_groups, S_safe_zones) # You can uncomment this to see the graph
+    # visualize_graph(G, V_groups, S_safe_zones) # You can uncomment this to see the graph
     
     # --- Run the simulation ---
     final_plan_results = EvacuationOptimization(G, V_groups, S_safe_zones) 
