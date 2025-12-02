@@ -4,6 +4,8 @@ import math
 import networkx as nx
 import matplotlib.pyplot as plt
 
+# --------------------------- Graph + initial data -----------------------------
+
 building_graph = {
     'R301_F3': [('H_F3', 0.5, 5)],
     'H_F3': [('R301_F3', 0.5, 5), ('Stairs_F2_F3', 1.0, 5)],
@@ -38,7 +40,7 @@ def get_edge_details(graph, u, v):
     return None, None
 
 
-# ----------------- Floyd–Warshall (all-pairs shortest paths) -------------------
+# ----------------- Floyd–Warshall (all-pairs shortest paths) ------------------
 
 def floyd_warshall_all_pairs(graph):
     nodes = set(graph.keys())
@@ -103,7 +105,7 @@ def get_fw_route(start, exits, dist, nxt):
     return best_d, route
 
 
-# ----------------------- Dijkstra (congestion-aware) ---------------------------
+# ----------------------- Dijkstra (congestion-aware) --------------------------
 
 def dijkstra_shortest_path(graph, start, exits, edge_usage):
     all_nodes = set(graph.keys())
@@ -149,7 +151,48 @@ def dijkstra_shortest_path(graph, start, exits, edge_usage):
     return float('inf'), []
 
 
-# --------------------- NetworkX graph + visualization --------------------------
+# -------------------- Hybrid route chooser (Dijkstra + FW) --------------------
+
+def choose_route(loc, exits, graph, edge_flow, fw_dist, fw_next, routing_mode):
+    """
+    routing_mode:
+      'dijkstra' – only Dijkstra
+      'floyd'    – only Floyd–Warshall
+      'hybrid'   – run Dijkstra and Floyd–Warshall, pick better
+    """
+    dij_d = dij_route = None
+    fw_d = fw_route = None
+
+    if routing_mode in ('dijkstra', 'hybrid'):
+        dij_d, dij_route = dijkstra_shortest_path(graph, loc, exits, edge_flow)
+
+    if routing_mode in ('floyd', 'hybrid'):
+        fw_d, fw_route = get_fw_route(loc, exits, fw_dist, fw_next)
+
+    if routing_mode == 'dijkstra':
+        return dij_d, dij_route or []
+
+    if routing_mode == 'floyd':
+        return fw_d, fw_route or []
+
+    # hybrid: try both
+    if (not dij_route or dij_d == float('inf')) and (not fw_route or fw_d == float('inf')):
+        return float('inf'), []
+
+    if not dij_route or dij_d == float('inf'):
+        return fw_d, fw_route
+
+    if not fw_route or fw_d == float('inf'):
+        return dij_d, dij_route
+
+    # simple heuristic: global FW distance vs Dijkstra's distance
+    if fw_d < dij_d:
+        return fw_d, fw_route
+    else:
+        return dij_d, dij_route
+
+
+# --------------------- NetworkX graph + visualization -------------------------
 
 def build_nx_graph(graph):
     G = nx.DiGraph()
@@ -251,14 +294,14 @@ def draw_state(G, pos, pop_state, edge_flow, t, step,
         plt.pause(0.3)
 
 
-# ------------------------ Evacuation simulation core ---------------------------
+# ------------------------ Evacuation simulation core --------------------------
 
 def EvacuationOptimization(graph, groups, exits,
                            time_limit=None,
                            target_evacuees=None,
                            stop_on_target=False,
                            verbose=False,
-                           routing_mode='dijkstra',
+                           routing_mode='hybrid',
                            visualize=False,
                            nx_graph=None,
                            pos=None,
@@ -281,8 +324,9 @@ def EvacuationOptimization(graph, groups, exits,
         'R101_F1', 'H_F1'
     ]
 
+    # Precompute FW for any mode that may use it (hybrid or floyd)
     fw_dist = fw_next = None
-    if routing_mode == 'floyd':
+    if routing_mode in ('hybrid', 'floyd'):
         fw_dist, fw_next = floyd_warshall_all_pairs(graph)
 
     if visualize and (nx_graph is None or pos is None):
@@ -295,7 +339,7 @@ def EvacuationOptimization(graph, groups, exits,
         if target_evacuees:
             print(f"Target evacuees: {target_evacuees}")
         print(f"Total evacuees: {total_pop}")
-        print(f"Routing mode: {routing_mode}")
+        print(f"Routing mode: {routing_mode} (Dijkstra + Floyd–Warshall in hybrid)")
         print()
 
     step = 0
@@ -319,7 +363,6 @@ def EvacuationOptimization(graph, groups, exits,
             if t >= eta:
                 in_transit.remove(arrival)
 
-                # safe decrement for edge_flow
                 prev_flow = edge_flow.get(edge_used, 0) - count
                 if prev_flow <= 0:
                     edge_flow.pop(edge_used, None)
@@ -338,7 +381,7 @@ def EvacuationOptimization(graph, groups, exits,
                                 print(f"[Time {t:.1f}] Target reached with {saved} evacuees")
                         if stop_on_target:
                             if verbose:
-                                print("[Time {:.1f}] Stopping after reaching target".format(t))
+                                print(f"[Time {t:.1f}] Stopping after reaching target", t)
                             if visualize:
                                 step += 1
                                 draw_state(nx_graph, pos, pop_state,
@@ -364,7 +407,7 @@ def EvacuationOptimization(graph, groups, exits,
 
         if saved == total_pop:
             if verbose:
-                print(f"[Time {t:.1f}] All evacuees are safe".format(t))
+                print(f"[Time {t:.1f}] All evacuees are safe")
             if visualize:
                 step += 1
                 draw_state(nx_graph, pos, pop_state,
@@ -384,10 +427,10 @@ def EvacuationOptimization(graph, groups, exits,
             people = loc_data['pop']
             speed_mod = loc_data.get('delay', 1.0)
 
-            if routing_mode == 'floyd':
-                _, route = get_fw_route(loc, exits, fw_dist, fw_next)
-            else:
-                _, route = dijkstra_shortest_path(graph, loc, exits, edge_flow)
+            # *** HYBRID DECISION: use both Dijkstra + Floyd–Warshall ***
+            _, route = choose_route(
+                loc, exits, graph, edge_flow, fw_dist, fw_next, routing_mode
+            )
 
             if not route or len(route) < 2:
                 continue
@@ -428,7 +471,7 @@ def EvacuationOptimization(graph, groups, exits,
 
         if not has_movement and not in_transit:
             if verbose:
-                print(f"[Time {t:.1f}] No further movement possible".format(t))
+                print(f"[Time {t:.1f}] No further movement possible")
             break
 
         # -------------------- 3. ADVANCE TIME --------------------
@@ -471,59 +514,61 @@ def print_scenario_report(name, results, total_pop):
     print("-" * 50 + "\n")
 
 
+# ---------------------------------- main --------------------------------------
+
 if __name__ == "__main__":
     total_pop = sum(group['pop'] for group in starting_groups.values())
     G_nx, pos = build_nx_graph(building_graph)
 
     plt.ion()
 
-    # Scenario A – Dijkstra, step-by-step with graph + console output
+    # Scenario A – Quick response, hybrid routing, step-by-step with graph
     res_a = EvacuationOptimization(
         building_graph,
         starting_groups,
         exit_points,
         target_evacuees=50,
         stop_on_target=True,
-        verbose=True,              # <- show step-by-step text like your screenshot
-        routing_mode='dijkstra',
+        verbose=True,
+        routing_mode='hybrid',       # <- uses both Dijkstra + Floyd–Warshall
         visualize=True,
         nx_graph=G_nx,
         pos=pos,
-        scenario_name="Scenario A – Dijkstra (Quick Response)",
-        step_by_step=True          # set False for auto-play
+        scenario_name="Scenario A – Hybrid (Quick Response)",
+        step_by_step=True
     )
-    print_scenario_report("Scenario A – Dijkstra (Quick Response)", res_a, total_pop)
+    print_scenario_report("Scenario A – Hybrid (Quick Response)", res_a, total_pop)
 
-    # Scenario B – Floyd–Warshall, text only
+    # Scenario B – Fire emergency (15-min limit), hybrid routing, text only
     res_b = EvacuationOptimization(
         building_graph,
         starting_groups,
         exit_points,
         time_limit=15.0,
-        verbose=True,              # <- turn on logs here too
-        routing_mode='floyd',
-        visualize=False,
+        verbose=True,
+        routing_mode='hybrid',       # <- hybrid again
+        visualize=True,
         nx_graph=G_nx,
         pos=pos,
-        scenario_name="Scenario B – Floyd–Warshall (15-min Limit)",
-        step_by_step=False
+        scenario_name="Scenario B – Hybrid (15-min Fire Emergency)",
+        step_by_step=True
     )
-    print_scenario_report("Scenario B – Floyd–Warshall (Fire Emergency)", res_b, total_pop)
+    print_scenario_report("Scenario B – Hybrid (Fire Emergency)", res_b, total_pop)
 
-    # Scenario C – Floyd–Warshall, full evacuation, text only
+    # Scenario C – Complete evacuation benchmark, hybrid routing, text only
     res_c = EvacuationOptimization(
         building_graph,
         starting_groups,
         exit_points,
-        verbose=True,              # <- logs for full evacuation
-        routing_mode='floyd',
-        visualize=False,
+        verbose=True,
+        routing_mode='hybrid',       # <- hybrid again
+        visualize=True,
         nx_graph=G_nx,
         pos=pos,
-        scenario_name="Scenario C – Floyd–Warshall (Complete Evacuation)",
-        step_by_step=False
+        scenario_name="Scenario C – Hybrid (Complete Evacuation)",
+        step_by_step=True
     )
-    print_scenario_report("Scenario C – Floyd–Warshall (Complete Evacuation)", res_c, total_pop)
+    print_scenario_report("Scenario C – Hybrid (Complete Evacuation)", res_c, total_pop)
 
     plt.ioff()
     plt.show()
