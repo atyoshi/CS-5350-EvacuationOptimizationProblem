@@ -38,6 +38,8 @@ def get_edge_details(graph, u, v):
     return None, None
 
 
+# ----------------- Floyd–Warshall (all-pairs shortest paths) -------------------
+
 def floyd_warshall_all_pairs(graph):
     nodes = set(graph.keys())
     for u, nbrs in graph.items():
@@ -101,6 +103,8 @@ def get_fw_route(start, exits, dist, nxt):
     return best_d, route
 
 
+# ----------------------- Dijkstra (congestion-aware) ---------------------------
+
 def dijkstra_shortest_path(graph, start, exits, edge_usage):
     all_nodes = set(graph.keys())
     for neighbors in graph.values():
@@ -144,6 +148,8 @@ def dijkstra_shortest_path(graph, start, exits, edge_usage):
 
     return float('inf'), []
 
+
+# --------------------- NetworkX graph + visualization --------------------------
 
 def build_nx_graph(graph):
     G = nx.DiGraph()
@@ -211,7 +217,11 @@ def draw_state(G, pos, pop_state, edge_flow, t, step,
 
     for u, v in G.edges():
         flow = edge_flow.get((u, v), 0)
+        if flow < 0:
+            flow = 0
         w = 1.0 + flow / 5.0
+        if w <= 0:
+            w = 0.2
         widths.append(w)
 
         if (u, v) in edges_highlight:
@@ -233,10 +243,15 @@ def draw_state(G, pos, pop_state, edge_flow, t, step,
 
     if step_by_step:
         print("Press Enter for next step (or Ctrl+C to stop)...")
-        input()
+        try:
+            input()
+        except EOFError:
+            pass
     else:
         plt.pause(0.3)
 
+
+# ------------------------ Evacuation simulation core ---------------------------
 
 def EvacuationOptimization(graph, groups, exits,
                            time_limit=None,
@@ -274,13 +289,14 @@ def EvacuationOptimization(graph, groups, exits,
         nx_graph, pos = build_nx_graph(graph)
 
     if verbose:
-        print(f"--- Starting Simulation ---")
+        print(f"\n=== {scenario_name or 'Evacuation Simulation'} ===")
         if time_limit:
             print(f"Time limit: {time_limit} minutes")
         if target_evacuees:
             print(f"Target evacuees: {target_evacuees}")
         print(f"Total evacuees: {total_pop}")
         print(f"Routing mode: {routing_mode}")
+        print()
 
     step = 0
 
@@ -291,31 +307,38 @@ def EvacuationOptimization(graph, groups, exits,
     for _ in range(2000):
         if time_limit and t > time_limit:
             if verbose:
-                print(f"\nTime limit reached at t = {t:.1f}")
+                print(f"[Time {t:.1f}] Time limit reached")
             break
 
         edges_used_step = set()
 
+        # -------------------- 1. ARRIVALS --------------------
         for arrival in list(in_transit):
             eta, dest, group_id, count, edge_used, speed_mod = arrival
 
             if t >= eta:
                 in_transit.remove(arrival)
-                edge_flow[edge_used] = edge_flow.get(edge_used, 0) - count
+
+                # safe decrement for edge_flow
+                prev_flow = edge_flow.get(edge_used, 0) - count
+                if prev_flow <= 0:
+                    edge_flow.pop(edge_used, None)
+                else:
+                    edge_flow[edge_used] = prev_flow
 
                 if dest in exits:
                     saved += count
                     if verbose:
-                        print(f"[t={t:.1f}] {count} from {group_id} arrived at {dest}")
+                        print(f"[Time {t:.1f}] {count} from {group_id} arrived at {dest}!")
 
                     if target_evacuees and saved >= target_evacuees:
                         if target_time is None:
                             target_time = t
                             if verbose:
-                                print(f"Target reached: {saved} evacuees at t={t:.1f}")
+                                print(f"[Time {t:.1f}] Target reached with {saved} evacuees")
                         if stop_on_target:
                             if verbose:
-                                print("Stopping after reaching target.")
+                                print("[Time {:.1f}] Stopping after reaching target".format(t))
                             if visualize:
                                 step += 1
                                 draw_state(nx_graph, pos, pop_state,
@@ -337,11 +360,11 @@ def EvacuationOptimization(graph, groups, exits,
                         pop_state[dest] = {'pop': 0, 'delay': speed_mod}
                     pop_state[dest]['pop'] += count
                     if verbose:
-                        print(f"[t={t:.1f}] {count} from {group_id} arrived at {dest}")
+                        print(f"[Time {t:.1f}] {count} from {group_id} arrived at {dest}")
 
         if saved == total_pop:
             if verbose:
-                print(f"\nAll evacuees safe at t={t:.1f}")
+                print(f"[Time {t:.1f}] All evacuees are safe".format(t))
             if visualize:
                 step += 1
                 draw_state(nx_graph, pos, pop_state,
@@ -350,6 +373,7 @@ def EvacuationOptimization(graph, groups, exits,
                            step_by_step)
             break
 
+        # -------------------- 2. DEPARTURES --------------------
         has_movement = False
 
         for loc in process_order:
@@ -392,8 +416,8 @@ def EvacuationOptimization(graph, groups, exits,
                 has_movement = True
 
                 if verbose:
-                    print(f"[t={t:.1f}] {flow} from {loc} -> {dst} "
-                          f"(ETA={eta:.1f}, speed={speed_mod})")
+                    print(f"[Time {t:.1f}] {flow} from {loc} moving to {dst} "
+                          f"(Speed Factor: {speed_mod:.1f}x, ETA: {eta:.1f})")
 
         step += 1
         if visualize:
@@ -404,9 +428,10 @@ def EvacuationOptimization(graph, groups, exits,
 
         if not has_movement and not in_transit:
             if verbose:
-                print(f"\nNo further movement at t={t:.1f}")
+                print(f"[Time {t:.1f}] No further movement possible".format(t))
             break
 
+        # -------------------- 3. ADVANCE TIME --------------------
         t += 0.5
 
     remaining = sum(
@@ -452,13 +477,14 @@ if __name__ == "__main__":
 
     plt.ion()
 
+    # Scenario A – Dijkstra, step-by-step with graph + console output
     res_a = EvacuationOptimization(
         building_graph,
         starting_groups,
         exit_points,
         target_evacuees=50,
         stop_on_target=True,
-        verbose=False,
+        verbose=True,              # <- show step-by-step text like your screenshot
         routing_mode='dijkstra',
         visualize=True,
         nx_graph=G_nx,
@@ -468,12 +494,13 @@ if __name__ == "__main__":
     )
     print_scenario_report("Scenario A – Dijkstra (Quick Response)", res_a, total_pop)
 
+    # Scenario B – Floyd–Warshall, text only
     res_b = EvacuationOptimization(
         building_graph,
         starting_groups,
         exit_points,
         time_limit=15.0,
-        verbose=False,
+        verbose=True,              # <- turn on logs here too
         routing_mode='floyd',
         visualize=False,
         nx_graph=G_nx,
@@ -483,11 +510,12 @@ if __name__ == "__main__":
     )
     print_scenario_report("Scenario B – Floyd–Warshall (Fire Emergency)", res_b, total_pop)
 
+    # Scenario C – Floyd–Warshall, full evacuation, text only
     res_c = EvacuationOptimization(
         building_graph,
         starting_groups,
         exit_points,
-        verbose=False,
+        verbose=True,              # <- logs for full evacuation
         routing_mode='floyd',
         visualize=False,
         nx_graph=G_nx,
