@@ -1,8 +1,7 @@
 import heapq
 import copy
+import time
 import math
-import networkx as nx
-import matplotlib.pyplot as plt
 
 # --------------------------- Graph + initial data -----------------------------
 
@@ -34,15 +33,17 @@ exit_points = ['Exit_A', 'Exit_B', 'Exit_C']
 
 
 def get_edge_details(graph, u, v):
+    """Return (travel_time, capacity) for directed edge u -> v."""
     for neighbor, time_weight, capacity in graph.get(u, []):
         if neighbor == v:
             return time_weight, capacity
     return None, None
 
 
-# ----------------- Floyd–Warshall (all-pairs shortest paths) ------------------
+# -------- Floyd–Warshall (dynamic programming all-pairs shortest paths) ------
 
 def floyd_warshall_all_pairs(graph):
+    """Compute all-pairs shortest travel times (ignoring congestion)."""
     nodes = set(graph.keys())
     for u, nbrs in graph.items():
         for v, t, c in nbrs:
@@ -53,16 +54,19 @@ def floyd_warshall_all_pairs(graph):
     dist = {u: {v: INF for v in nodes} for u in nodes}
     nxt = {u: {v: None for v in nodes} for u in nodes}
 
+    # distance to self = 0
     for u in nodes:
         dist[u][u] = 0.0
         nxt[u][u] = u
 
+    # direct edges
     for u, nbrs in graph.items():
         for v, t, c in nbrs:
             if t < dist[u][v]:
                 dist[u][v] = t
                 nxt[u][v] = v
 
+    # dynamic programming: allow intermediate node k
     for k in nodes:
         for i in nodes:
             dik = dist[i][k]
@@ -80,6 +84,7 @@ def floyd_warshall_all_pairs(graph):
 
 
 def get_fw_route(start, exits, dist, nxt):
+    """Get best route from 'start' to any exit using FW tables."""
     best_exit = None
     best_d = math.inf
 
@@ -105,9 +110,13 @@ def get_fw_route(start, exits, dist, nxt):
     return best_d, route
 
 
-# ----------------------- Dijkstra (congestion-aware) --------------------------
+# -------------------- Dijkstra (greedy, congestion-aware) ---------------------
 
 def dijkstra_shortest_path(graph, start, exits, edge_usage):
+    """
+    Dijkstra that includes a congestion penalty based on current edge_usage.
+    edge_usage[(u,v)] = number of people currently on that edge.
+    """
     all_nodes = set(graph.keys())
     for neighbors in graph.values():
         for n, _, _ in neighbors:
@@ -124,6 +133,7 @@ def dijkstra_shortest_path(graph, start, exits, edge_usage):
         curr_dist, node = heapq.heappop(pq)
 
         if node in exits:
+            # reconstruct path
             path = []
             while node in prev:
                 path.insert(0, node)
@@ -137,9 +147,11 @@ def dijkstra_shortest_path(graph, start, exits, edge_usage):
         for neighbor, travel_time, max_cap in graph.get(node, []):
             edge = (node, neighbor)
 
+            # if already at or above capacity, avoid this edge
             if edge_usage.get(edge, 0) >= max_cap:
                 continue
 
+            # simple congestion penalty = current flow on that edge
             penalty = edge_usage.get(edge, 0)
             d = curr_dist + travel_time + penalty
 
@@ -151,147 +163,64 @@ def dijkstra_shortest_path(graph, start, exits, edge_usage):
     return float('inf'), []
 
 
-# -------------------- Hybrid route chooser (Dijkstra + FW) --------------------
+# ------------------------ Logging helpers -------------------------------------
 
-def choose_route(loc, exits, graph, edge_flow, fw_dist, fw_next, routing_mode):
+def log(msg, verbose, log_lines):
     """
-    routing_mode:
-      'dijkstra' – only Dijkstra
-      'floyd'    – only Floyd–Warshall
-      'hybrid'   – run Dijkstra and Floyd–Warshall, pick better
+    High-level log:
+    - printed to console if verbose
+    - ALWAYS appended to log_lines (goes into report)
     """
-    dij_d = dij_route = None
-    fw_d = fw_route = None
+    if verbose:
+        print(msg)
+    log_lines.append(msg)
 
-    if routing_mode in ('dijkstra', 'hybrid'):
-        dij_d, dij_route = dijkstra_shortest_path(graph, loc, exits, edge_flow)
 
-    if routing_mode in ('floyd', 'hybrid'):
-        fw_d, fw_route = get_fw_route(loc, exits, fw_dist, fw_next)
+def detail_log(msg, verbose):
+    """
+    Detailed event log (per-move, arrivals, etc.):
+    - printed to console if verbose
+    - NOT stored in log_lines (kept out of report)
+    """
+    if verbose:
+        print(msg)
 
-    if routing_mode == 'dijkstra':
-        return dij_d, dij_route or []
 
-    if routing_mode == 'floyd':
-        return fw_d, fw_route or []
+# ------------------------ Simulation display helper ---------------------------
 
-    # hybrid: try both
-    if (not dij_route or dij_d == float('inf')) and (not fw_route or fw_d == float('inf')):
-        return float('inf'), []
+def format_step_state(step, t, pop_state, in_transit, saved, total_pop, exits):
+    """Return a multi-line string for a per-step snapshot."""
+    lines = []
+    lines.append("\n" + "=" * 70)
+    lines.append(f"STEP {step:03d}  |  SIM TIME = {t:.1f} minutes")
+    lines.append("=" * 70)
 
-    if not dij_route or dij_d == float('inf'):
-        return fw_d, fw_route
+    # People at each location
+    lines.append("People at nodes:")
+    for loc in sorted(pop_state.keys()):
+        data = pop_state[loc]
+        p = data.get('pop', 0) if isinstance(data, dict) else data
+        mark = " [EXIT]" if loc in exits else ""
+        lines.append(f"  - {loc:10s}: {p:3d} people{mark}")
 
-    if not fw_route or fw_d == float('inf'):
-        return dij_d, dij_route
-
-    # simple heuristic: global FW distance vs Dijkstra's distance
-    if fw_d < dij_d:
-        return fw_d, fw_route
+    # People in transit
+    if in_transit:
+        lines.append("\nPeople in transit:")
+        for (eta, dest, group_id, count, edge_used, speed_mod, route, alg) in in_transit:
+            src, dst = edge_used
+            lines.append(
+                f"  - {count:3d} from {group_id} going {src} -> {dst} "
+                f"(ETA={eta:.1f}, speed={speed_mod:.1f}x, alg={alg})"
+            )
+            lines.append(f"      full route to exit: {route}")
     else:
-        return dij_d, dij_route
+        lines.append("\nPeople in transit: none")
 
-
-# --------------------- NetworkX graph + visualization -------------------------
-
-def build_nx_graph(graph):
-    G = nx.DiGraph()
-    for u, nbrs in graph.items():
-        G.add_node(u)
-        for v, t, c in nbrs:
-            G.add_edge(u, v, time=t, cap=c)
-
-    pos = {
-        'R301_F3': (0, 3), 'H_F3': (2, 3),
-        'Stairs_F2_F3': (4, 2.3),
-
-        'R201_F2': (0, 2), 'H_F2': (2, 2),
-        'Stairs_F1_F2': (4, 1.3),
-
-        'R101_F1': (0, 1), 'H_F1': (2, 1),
-
-        'Exit_A': (4, 0.3), 'Exit_B': (5, 0.6), 'Exit_C': (6, 0.9)
-    }
-
-    for n in G.nodes():
-        if n not in pos:
-            pos[n] = (0, 0)
-
-    return G, pos
-
-
-def draw_state(G, pos, pop_state, edge_flow, t, step,
-               scenario_name="", edges_highlight=None,
-               step_by_step=False):
-    plt.clf()
-    ax = plt.gca()
-    ax.set_title(f"{scenario_name}\nt = {t:.1f}   step = {step}")
-
-    node_sizes = []
-    node_colors = []
-    labels = {}
-
-    for node in G.nodes():
-        pop = 0
-        if node in pop_state and isinstance(pop_state[node], dict):
-            pop = pop_state[node].get('pop', 0)
-
-        size = 300 + pop * 2
-        node_sizes.append(size)
-
-        if node.startswith("Exit"):
-            color = "green"
-        elif node.startswith("R"):
-            color = "orange"
-        elif "Stairs" in node:
-            color = "red"
-        else:
-            color = "skyblue"
-        node_colors.append(color)
-
-        label = node
-        if pop > 0:
-            label = f"{node}\n({pop})"
-        labels[node] = label
-
-    widths = []
-    edge_colors = []
-    edges_highlight = edges_highlight or set()
-
-    for u, v in G.edges():
-        flow = edge_flow.get((u, v), 0)
-        if flow < 0:
-            flow = 0
-        w = 1.0 + flow / 5.0
-        if w <= 0:
-            w = 0.2
-        widths.append(w)
-
-        if (u, v) in edges_highlight:
-            edge_colors.append("red")
-        else:
-            edge_colors.append("gray")
-
-    nx.draw_networkx_nodes(G, pos, node_size=node_sizes,
-                           node_color=node_colors, ax=ax)
-    nx.draw_networkx_edges(G, pos, width=widths,
-                           edge_color=edge_colors,
-                           arrows=True, ax=ax)
-    nx.draw_networkx_labels(G, pos, labels=labels,
-                            font_size=8, ax=ax)
-
-    ax.set_axis_off()
-    plt.tight_layout()
-    plt.draw()
-
-    if step_by_step:
-        print("Press Enter for next step (or Ctrl+C to stop)...")
-        try:
-            input()
-        except EOFError:
-            pass
-    else:
-        plt.pause(0.3)
+    # Saved so far
+    pct = (saved / total_pop * 100.0) if total_pop > 0 else 0.0
+    lines.append(f"\nSaved so far: {saved}/{total_pop} ({pct:.1f}%)")
+    lines.append("=" * 70)
+    return "\n".join(lines)
 
 
 # ------------------------ Evacuation simulation core --------------------------
@@ -301,21 +230,26 @@ def EvacuationOptimization(graph, groups, exits,
                            target_evacuees=None,
                            stop_on_target=False,
                            verbose=False,
-                           routing_mode='hybrid',
-                           visualize=False,
-                           nx_graph=None,
-                           pos=None,
-                           scenario_name="",
-                           step_by_step=False):
+                           routing_mode='dijkstra',
+                           show_steps=False):
+    """
+    Simulate evacuation using either:
+      routing_mode='dijkstra' – greedy, congestion-aware
+      routing_mode='floyd'    – global, DP-based shortest paths (no congestion in route choice)
+
+    If show_steps=True, store a full "snapshot" every half-step in the log.
+    If verbose=True, also print detailed per-move messages to the console.
+    """
     t = 0.0
     saved = 0
     target_time = None
 
     total_pop = sum(group['pop'] for group in groups.values())
-    pop_state = copy.deepcopy(groups)
+    pop_state = copy.deepcopy(groups)   # node -> {'pop', 'delay'}
 
+    # in_transit: (eta, dest, group_id, count, edge_used, speed_mod, route, alg_used)
     in_transit = []
-    edge_flow = {}
+    edge_flow = {}       # (u,v) -> current number of evacuees on that edge
 
     process_order = [
         'R301_F3', 'H_F3',
@@ -324,99 +258,97 @@ def EvacuationOptimization(graph, groups, exits,
         'R101_F1', 'H_F1'
     ]
 
-    # Precompute FW for any mode that may use it (hybrid or floyd)
+    # Precompute FW tables once if needed
     fw_dist = fw_next = None
-    if routing_mode in ('hybrid', 'floyd'):
+    if routing_mode == 'floyd':
         fw_dist, fw_next = floyd_warshall_all_pairs(graph)
 
-    if visualize and (nx_graph is None or pos is None):
-        nx_graph, pos = build_nx_graph(graph)
+    log_lines = []
 
-    if verbose:
-        print(f"\n=== {scenario_name or 'Evacuation Simulation'} ===")
-        if time_limit:
-            print(f"Time limit: {time_limit} minutes")
-        if target_evacuees:
-            print(f"Target evacuees: {target_evacuees}")
-        print(f"Total evacuees: {total_pop}")
-        print(f"Routing mode: {routing_mode} (Dijkstra + Floyd–Warshall in hybrid)")
-        print()
+    # Header
+    log(f"--- Starting Simulation (routing = {routing_mode}) ---", verbose, log_lines)
+    if time_limit is not None:
+        log(f"Time limit: {time_limit} minutes", verbose, log_lines)
+    if target_evacuees is not None:
+        log(f"Target evacuees: {target_evacuees}", verbose, log_lines)
+    log(f"Total evacuees in building: {total_pop}\n", verbose, log_lines)
 
     step = 0
+    if show_steps:
+        snapshot = format_step_state(step, t, pop_state, in_transit,
+                                     saved, total_pop, exits)
+        log(snapshot, verbose, log_lines)
 
-    if visualize:
-        draw_state(nx_graph, pos, pop_state, edge_flow,
-                   t, step, scenario_name, set(), step_by_step)
-
+    # Up to 2000 half-steps = 1000 minutes max
     for _ in range(2000):
-        if time_limit and t > time_limit:
-            if verbose:
-                print(f"[Time {t:.1f}] Time limit reached")
+
+        # stop if building is unsafe
+        if time_limit is not None and t > time_limit:
+            log(f"[t={t:.1f}] Time limit reached.", verbose, log_lines)
             break
 
-        edges_used_step = set()
-
-        # -------------------- 1. ARRIVALS --------------------
+        # ------------------ 1. ARRIVALS ------------------
         for arrival in list(in_transit):
-            eta, dest, group_id, count, edge_used, speed_mod = arrival
+            (eta, dest, group_id, count,
+             edge_used, speed_mod, route, alg_used) = arrival
 
             if t >= eta:
                 in_transit.remove(arrival)
-
-                prev_flow = edge_flow.get(edge_used, 0) - count
-                if prev_flow <= 0:
-                    edge_flow.pop(edge_used, None)
-                else:
-                    edge_flow[edge_used] = prev_flow
+                edge_flow[edge_used] = edge_flow.get(edge_used, 0) - count
 
                 if dest in exits:
                     saved += count
-                    if verbose:
-                        print(f"[Time {t:.1f}] {count} from {group_id} arrived at {dest}!")
+                    detail_log(
+                        f"[t={t:.1f}] {count} from {group_id} arrived at {dest} (via {alg_used}).",
+                        verbose
+                    )
 
-                    if target_evacuees and saved >= target_evacuees:
+                    if target_evacuees is not None and saved >= target_evacuees:
                         if target_time is None:
                             target_time = t
-                            if verbose:
-                                print(f"[Time {t:.1f}] Target reached with {saved} evacuees")
+                            log(f"[t={t:.1f}] Target reached with {saved} evacuees.",
+                                verbose, log_lines)
                         if stop_on_target:
-                            if verbose:
-                                print(f"[Time {t:.1f}] Stopping after reaching target", t)
-                            if visualize:
-                                step += 1
-                                draw_state(nx_graph, pos, pop_state,
-                                           edge_flow, t, step,
-                                           scenario_name, edges_used_step,
-                                           step_by_step)
                             remaining = sum(
                                 g['pop'] for g in pop_state.values()
                                 if isinstance(g, dict)
                             )
+                            log(f"[t={t:.1f}] Stopping after reaching target.\n",
+                                verbose, log_lines)
+                            if show_steps:
+                                step += 1
+                                snapshot = format_step_state(step, t, pop_state,
+                                                             in_transit, saved,
+                                                             total_pop, exits)
+                                log(snapshot, verbose, log_lines)
                             return {
                                 "Total_Evacuees_Saved": saved,
                                 "Evacuation_Time_T": t,
                                 "Remaining_At_Start": remaining,
-                                "Target_Reached_Time": target_time
+                                "Target_Reached_Time": target_time,
+                                "Log": log_lines
                             }
                 else:
+                    # people arrive into intermediate nodes (hallways, stairs)
                     if dest not in pop_state:
                         pop_state[dest] = {'pop': 0, 'delay': speed_mod}
                     pop_state[dest]['pop'] += count
-                    if verbose:
-                        print(f"[Time {t:.1f}] {count} from {group_id} arrived at {dest}")
+                    detail_log(
+                        f"[t={t:.1f}] {count} from {group_id} arrived at {dest}.",
+                        verbose
+                    )
 
+        # everyone safe
         if saved == total_pop:
-            if verbose:
-                print(f"[Time {t:.1f}] All evacuees are safe")
-            if visualize:
+            log(f"[t={t:.1f}] All evacuees are safe.\n", verbose, log_lines)
+            if show_steps:
                 step += 1
-                draw_state(nx_graph, pos, pop_state,
-                           edge_flow, t, step,
-                           scenario_name, edges_used_step,
-                           step_by_step)
+                snapshot = format_step_state(step, t, pop_state, in_transit,
+                                             saved, total_pop, exits)
+                log(snapshot, verbose, log_lines)
             break
 
-        # -------------------- 2. DEPARTURES --------------------
+        # ------------------ 2. DEPARTURES ------------------
         has_movement = False
 
         for loc in process_order:
@@ -427,10 +359,13 @@ def EvacuationOptimization(graph, groups, exits,
             people = loc_data['pop']
             speed_mod = loc_data.get('delay', 1.0)
 
-            # *** HYBRID DECISION: use both Dijkstra + Floyd–Warshall ***
-            _, route = choose_route(
-                loc, exits, graph, edge_flow, fw_dist, fw_next, routing_mode
-            )
+            # choose path depending on routing_mode
+            if routing_mode == 'floyd':
+                _, route = get_fw_route(loc, exits, fw_dist, fw_next)
+                alg_used = "Floyd–Warshall"
+            else:  # 'dijkstra'
+                _, route = dijkstra_shortest_path(graph, loc, exits, edge_flow)
+                alg_used = "Dijkstra"
 
             if not route or len(route) < 2:
                 continue
@@ -445,36 +380,48 @@ def EvacuationOptimization(graph, groups, exits,
             if avail <= 0:
                 continue
 
+            # how many can we send through this edge now?
             flow = min(people, avail)
 
             if flow > 0:
                 travel = base_time * speed_mod
                 eta = t + travel
-                orig_id = loc if loc in groups else f"{loc}"
+                group_id = loc  # keep origin label simple
 
-                in_transit.append((eta, dst, orig_id, flow, edge, speed_mod))
+                in_transit.append(
+                    (eta, dst, group_id, flow, edge, speed_mod, route, alg_used)
+                )
                 pop_state[loc]['pop'] -= flow
                 edge_flow[edge] = edge_flow.get(edge, 0) + flow
-                edges_used_step.add(edge)
                 has_movement = True
 
-                if verbose:
-                    print(f"[Time {t:.1f}] {flow} from {loc} moving to {dst} "
-                          f"(Speed Factor: {speed_mod:.1f}x, ETA: {eta:.1f})")
-
-        step += 1
-        if visualize:
-            draw_state(nx_graph, pos, pop_state,
-                       edge_flow, t, step,
-                       scenario_name, edges_used_step,
-                       step_by_step)
+                detail_log(
+                    f"[t={t:.1f}] ASSIGN {flow} from {loc} -> {dst} "
+                    f"(alg={alg_used}, travel={base_time:.1f}, "
+                    f"speed={speed_mod:.1f}x, ETA={eta:.1f})",
+                    verbose
+                )
+                detail_log(
+                    f"        full route to exit: {route}",
+                    verbose
+                )
 
         if not has_movement and not in_transit:
-            if verbose:
-                print(f"[Time {t:.1f}] No further movement possible")
+            log(f"[t={t:.1f}] No further movement possible.\n", verbose, log_lines)
+            if show_steps:
+                step += 1
+                snapshot = format_step_state(step, t, pop_state, in_transit,
+                                             saved, total_pop, exits)
+                log(snapshot, verbose, log_lines)
             break
 
-        # -------------------- 3. ADVANCE TIME --------------------
+        # ------------------ 3. ADVANCE TIME ------------------
+        step += 1
+        if show_steps:
+            snapshot = format_step_state(step, t, pop_state, in_transit,
+                                         saved, total_pop, exits)
+            log(snapshot, verbose, log_lines)
+
         t += 0.5
 
     remaining = sum(
@@ -486,11 +433,11 @@ def EvacuationOptimization(graph, groups, exits,
         "Total_Evacuees_Saved": saved,
         "Evacuation_Time_T": t,
         "Remaining_At_Start": remaining,
-        "Target_Reached_Time": target_time
+        "Target_Reached_Time": target_time,
+        "Log": log_lines
     }
-
-
-def print_scenario_report(name, results, total_pop):
+                               
+def print_scenario_report(name, results, total_pop, cpu_time_ms=None):
     print("\n" + "-" * 50)
     print(f"SCENARIO REPORT: {name}")
     print("-" * 50)
@@ -499,76 +446,120 @@ def print_scenario_report(name, results, total_pop):
     time_taken = results['Evacuation_Time_T']
     target_time = results.get('Target_Reached_Time')
 
-    print(f"> Total Evacuees: {total_pop}")
-    print(f"> Evacuees Saved: {saved} ({saved / total_pop * 100:.1f}%)")
-    print(f"> Evacuees Left:  {results['Remaining_At_Start']}")
-    print(f"> Time Elapsed:   {time_taken:.1f} minutes")
+    print(f"> Total Evacuees in Building: {total_pop}")
+    print(f"> Evacuees Saved:            {saved} ({saved / total_pop * 100:.1f}%)")
+    print(f"> Evacuees Left Inside:      {results['Remaining_At_Start']}")
+    print(f"> Simulation Time Elapsed:   {time_taken:.1f} minutes")
 
     if target_time is not None:
-        print(f"> Target Reached: {target_time:.1f} minutes")
+        print(f"> Time When Target Reached:  {target_time:.1f} minutes")
 
     if time_taken > 0:
         rate = saved / time_taken
-        print(f"> Avg Evac Rate:  {rate:.1f} people/min")
-
+        print(f"> Avg Evacuation Rate:       {rate:.1f} people/min")
+        
+    if cpu_time_ms is not None:
+        print(f"> CPU Time (algorithm):      {cpu_time_ms:.4f} ms")
     print("-" * 50 + "\n")
 
+def append_report_to_file(filename, scenario_name, results, total_pop, cpu_time_ms):
+    """Append a report (summary + clean step-by-step log + CPU time) to a text file."""
+    with open(filename, "a", encoding="utf-8") as f:
+        # Scenario header
+        f.write("\n" + "=" * 80 + "\n")
+        f.write(f"SCENARIO REPORT: {scenario_name}\n")
+        f.write("=" * 80 + "\n\n")
 
+        saved = results['Total_Evacuees_Saved']
+        time_taken = results['Evacuation_Time_T']
+        target_time = results.get('Target_Reached_Time')
+
+        # --- Summary block ---
+        f.write("Summary\n")
+        f.write("-" * 80 + "\n")
+        f.write(f"Total evacuees in building: {total_pop}\n")
+        f.write(f"Evacuees saved:             {saved} ({saved / total_pop * 100:.1f}%)\n")
+        f.write(f"Evacuees left inside:       {results['Remaining_At_Start']}\n")
+        f.write(f"Simulation time elapsed:    {time_taken:.1f} minutes\n")
+        if target_time is not None:
+            f.write(f"Time when target reached:   {target_time:.1f} minutes\n")
+        if time_taken > 0:
+            rate = saved / time_taken
+            f.write(f"Average evacuation rate:    {rate:.1f} people/min\n")
+
+        # CPU time (implementation overhead comparison)
+        f.write(f"CPU time for algorithm:     {cpu_time_ms:.4f} ms\n")
+
+        # --- Clean step-by-step log block ---
+        f.write("\nStep-by-step simulation log\n")
+        f.write("-" * 80 + "\n")
+
+        for entry in results.get("Log", []):
+            f.write(entry + "\n")
+
+        f.write("\n")
 # ---------------------------------- main --------------------------------------
 
 if __name__ == "__main__":
     total_pop = sum(group['pop'] for group in starting_groups.values())
-    G_nx, pos = build_nx_graph(building_graph)
+    report_file = "evacuation_report.txt"
 
-    plt.ion()
+    # Reset report file
+    with open(report_file, "w", encoding="utf-8") as f:
+        f.write("Evacuation Simulation Report\n")
+        f.write("========================================\n\n")
 
-    # Scenario A – Quick response, hybrid routing, step-by-step with graph
-    res_a = EvacuationOptimization(
+    time_limit = 15.0
+
+    # ===================== FLOYD–WARSHALL (time-limit) =====================
+    print("\n================= FLOYD–WARSHALL (time-limit comparison) =================")
+    start_fw = time.perf_counter()
+    res_fw = EvacuationOptimization(
         building_graph,
         starting_groups,
         exit_points,
-        target_evacuees=50,
-        stop_on_target=True,
-        verbose=True,
-        routing_mode='hybrid',       # <- uses both Dijkstra + Floyd–Warshall
-        visualize=True,
-        nx_graph=G_nx,
-        pos=pos,
-        scenario_name="Scenario A – Hybrid (Quick Response)",
-        step_by_step=True
+        time_limit=time_limit,
+        target_evacuees=None,
+        stop_on_target=False,
+        verbose=True,         # show detailed events on console
+        routing_mode='floyd',
+        show_steps=True       # record STEP snapshots into log
     )
-    print_scenario_report("Scenario A – Hybrid (Quick Response)", res_a, total_pop)
+    end_fw = time.perf_counter()
+    cpu_fw = (end_fw - start_fw) * 1000.0
 
-    # Scenario B – Fire emergency (15-min limit), hybrid routing, text only
-    res_b = EvacuationOptimization(
+    print_scenario_report("Time-Limit Scenario (Floyd–Warshall)", res_fw, total_pop, cpu_fw)
+
+    append_report_to_file(
+        report_file,
+        "Time-Limit Scenario (Floyd–Warshall)",
+        res_fw,
+        total_pop,
+        cpu_fw
+    )
+     # ===================== DIJKSTRA (time-limit) =====================
+    print("\n================= DIJKSTRA (time-limit comparison) =================")
+    start_fw = time.perf_counter()
+    res_fw = EvacuationOptimization(
         building_graph,
         starting_groups,
         exit_points,
-        time_limit=15.0,
-        verbose=True,
-        routing_mode='hybrid',       # <- hybrid again
-        visualize=True,
-        nx_graph=G_nx,
-        pos=pos,
-        scenario_name="Scenario B – Hybrid (15-min Fire Emergency)",
-        step_by_step=True
+        time_limit=time_limit,
+        target_evacuees=None,
+        stop_on_target=False,
+        verbose=True,         # show detailed events on console
+        routing_mode='dijkstra',
+        show_steps=True       # record STEP snapshots into log
     )
-    print_scenario_report("Scenario B – Hybrid (Fire Emergency)", res_b, total_pop)
+    end_fw = time.perf_counter()
+    cpu_fw = (end_fw - start_fw) * 1000.0
 
-    # Scenario C – Complete evacuation benchmark, hybrid routing, text only
-    res_c = EvacuationOptimization(
-        building_graph,
-        starting_groups,
-        exit_points,
-        verbose=True,
-        routing_mode='hybrid',       # <- hybrid again
-        visualize=True,
-        nx_graph=G_nx,
-        pos=pos,
-        scenario_name="Scenario C – Hybrid (Complete Evacuation)",
-        step_by_step=True
+    print_scenario_report("Time-Limit Scenario (DIJKSTRA)", res_fw, total_pop, cpu_fw)
+
+    append_report_to_file(
+        report_file,
+        "Time-Limit Scenario (DIJKSTRA)",
+        res_fw,
+        total_pop,
+        cpu_fw
     )
-    print_scenario_report("Scenario C – Hybrid (Complete Evacuation)", res_c, total_pop)
-
-    plt.ioff()
-    plt.show()
