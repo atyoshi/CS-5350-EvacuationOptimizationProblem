@@ -1,0 +1,1047 @@
+Evacuation Simulation Report
+========================================
+
+
+================================================================================
+SCENARIO REPORT: Time-Limit Scenario (Floyd–Warshall)
+================================================================================
+
+Summary
+--------------------------------------------------------------------------------
+Total evacuees in building: 300
+Evacuees saved:             125 (41.7%)
+Evacuees left inside:       175
+Simulation time elapsed:    15.5 minutes
+Average evacuation rate:    8.1 people/min
+CPU time for algorithm:     20.0083 ms
+
+Step-by-step simulation log
+--------------------------------------------------------------------------------
+--- Starting Simulation (routing = floyd) ---
+Time limit: 15.0 minutes
+Total evacuees in building: 300
+
+
+======================================================================
+STEP 000  |  SIM TIME = 0.0 minutes
+======================================================================
+People at nodes:
+  - R101_F1   : 100 people
+  - R201_F2   : 100 people
+  - R301_F3   : 100 people
+
+People in transit: none
+
+Saved so far: 0/300 (0.0%)
+======================================================================
+
+======================================================================
+STEP 001  |  SIM TIME = 0.0 minutes
+======================================================================
+People at nodes:
+  - R101_F1   :  90 people
+  - R201_F2   :  90 people
+  - R301_F3   :  95 people
+
+People in transit:
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=0.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=2.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=0.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+
+Saved so far: 0/300 (0.0%)
+======================================================================
+
+======================================================================
+STEP 002  |  SIM TIME = 0.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F3      :   0 people
+  - R101_F1   :  80 people
+  - R201_F2   :  90 people
+  - R301_F3   :  90 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=2.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=1.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=1.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=1.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=1.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 0/300 (0.0%)
+======================================================================
+
+======================================================================
+STEP 003  |  SIM TIME = 1.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  10 people
+  - H_F3      :   5 people
+  - R101_F1   :  70 people
+  - R201_F2   :  90 people
+  - R301_F3   :  85 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=2.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=1.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=1.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=1.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=1.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+
+Saved so far: 0/300 (0.0%)
+======================================================================
+
+======================================================================
+STEP 004  |  SIM TIME = 1.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  10 people
+  - H_F3      :   5 people
+  - R101_F1   :  60 people
+  - R201_F2   :  90 people
+  - R301_F3   :  80 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=2.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=2.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=2.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=2.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=2.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=2.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 10/300 (3.3%)
+======================================================================
+
+======================================================================
+STEP 005  |  SIM TIME = 2.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  20 people
+  - H_F2      :   0 people
+  - H_F3      :  10 people
+  - R101_F1   :  50 people
+  - R201_F2   :  80 people
+  - R301_F3   :  75 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=2.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=2.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=2.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=2.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=4.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=2.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+
+Saved so far: 10/300 (3.3%)
+======================================================================
+
+======================================================================
+STEP 006  |  SIM TIME = 2.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  20 people
+  - H_F2      :   0 people
+  - H_F3      :  10 people
+  - R101_F1   :  40 people
+  - R201_F2   :  80 people
+  - R301_F3   :  70 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=4.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=3.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=3.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=3.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=3.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=3.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 20/300 (6.7%)
+======================================================================
+
+======================================================================
+STEP 007  |  SIM TIME = 3.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  30 people
+  - H_F2      :   0 people
+  - H_F3      :  15 people
+  - R101_F1   :  30 people
+  - R201_F2   :  80 people
+  - R301_F3   :  65 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=4.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=3.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=3.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=3.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=3.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=3.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+
+Saved so far: 20/300 (6.7%)
+======================================================================
+
+======================================================================
+STEP 008  |  SIM TIME = 3.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  30 people
+  - H_F2      :   5 people
+  - H_F3      :  15 people
+  - R101_F1   :  20 people
+  - R201_F2   :  80 people
+  - R301_F3   :  60 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=4.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=4.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=4.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=4.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=4.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=4.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 30/300 (10.0%)
+======================================================================
+
+======================================================================
+STEP 009  |  SIM TIME = 4.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  40 people
+  - H_F2      :  15 people
+  - H_F3      :  20 people
+  - R101_F1   :  10 people
+  - R201_F2   :  70 people
+  - R301_F3   :  55 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=4.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=4.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=4.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=4.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=4.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+
+Saved so far: 30/300 (10.0%)
+======================================================================
+
+======================================================================
+STEP 010  |  SIM TIME = 4.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  40 people
+  - H_F2      :  20 people
+  - H_F3      :  20 people
+  - R101_F1   :   0 people
+  - R201_F2   :  70 people
+  - R301_F3   :  50 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=5.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=5.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=5.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R101_F1 going R101_F1 -> H_F1 (ETA=5.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R101_F1', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=5.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 40/300 (13.3%)
+======================================================================
+
+======================================================================
+STEP 011  |  SIM TIME = 5.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  50 people
+  - H_F2      :  20 people
+  - H_F3      :  25 people
+  - R101_F1   :   0 people
+  - R201_F2   :  70 people
+  - R301_F3   :  45 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=5.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=5.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=5.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=5.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 40/300 (13.3%)
+======================================================================
+
+======================================================================
+STEP 012  |  SIM TIME = 5.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  40 people
+  - H_F2      :  25 people
+  - H_F3      :  25 people
+  - R101_F1   :   0 people
+  - R201_F2   :  70 people
+  - R301_F3   :  40 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=6.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=6.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=6.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=6.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=6.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 50/300 (16.7%)
+======================================================================
+
+======================================================================
+STEP 013  |  SIM TIME = 6.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  40 people
+  - H_F2      :  25 people
+  - H_F3      :  30 people
+  - R101_F1   :   0 people
+  - R201_F2   :  60 people
+  - R301_F3   :  35 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=6.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=6.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=6.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=6.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=6.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=8.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 50/300 (16.7%)
+======================================================================
+
+======================================================================
+STEP 014  |  SIM TIME = 6.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  30 people
+  - H_F2      :  25 people
+  - H_F3      :  30 people
+  - R101_F1   :   0 people
+  - R201_F2   :  60 people
+  - R301_F3   :  30 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=8.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=7.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=7.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=7.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=7.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 60/300 (20.0%)
+======================================================================
+
+======================================================================
+STEP 015  |  SIM TIME = 7.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  30 people
+  - H_F2      :  25 people
+  - H_F3      :  35 people
+  - R101_F1   :   0 people
+  - R201_F2   :  60 people
+  - R301_F3   :  25 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=8.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=7.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=7.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=7.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=7.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 60/300 (20.0%)
+======================================================================
+
+======================================================================
+STEP 016  |  SIM TIME = 7.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  20 people
+  - H_F2      :  30 people
+  - H_F3      :  35 people
+  - R101_F1   :   0 people
+  - R201_F2   :  60 people
+  - R301_F3   :  20 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=8.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=8.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=8.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=8.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=8.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 70/300 (23.3%)
+======================================================================
+
+======================================================================
+STEP 017  |  SIM TIME = 8.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  20 people
+  - H_F2      :  40 people
+  - H_F3      :  40 people
+  - R101_F1   :   0 people
+  - R201_F2   :  50 people
+  - R301_F3   :  15 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=8.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=8.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=8.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=8.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 70/300 (23.3%)
+======================================================================
+
+======================================================================
+STEP 018  |  SIM TIME = 8.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  10 people
+  - H_F2      :  45 people
+  - H_F3      :  40 people
+  - R101_F1   :   0 people
+  - R201_F2   :  50 people
+  - R301_F3   :  10 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=9.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=9.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=9.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=9.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 80/300 (26.7%)
+======================================================================
+
+======================================================================
+STEP 019  |  SIM TIME = 9.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  10 people
+  - H_F2      :  45 people
+  - H_F3      :  45 people
+  - R101_F1   :   0 people
+  - R201_F2   :  50 people
+  - R301_F3   :   5 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=9.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=9.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=9.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=9.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 80/300 (26.7%)
+======================================================================
+
+======================================================================
+STEP 020  |  SIM TIME = 9.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F2      :  50 people
+  - H_F3      :  45 people
+  - R101_F1   :   0 people
+  - R201_F2   :  50 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=10.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from R301_F3 going R301_F3 -> H_F3 (ETA=10.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['R301_F3', 'H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=10.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=10.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=10.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 90/300 (30.0%)
+======================================================================
+
+======================================================================
+STEP 021  |  SIM TIME = 10.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :  10 people
+  - H_F2      :  50 people
+  - H_F3      :  50 people
+  - R101_F1   :   0 people
+  - R201_F2   :  40 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=10.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=10.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=10.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=10.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=12.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 90/300 (30.0%)
+======================================================================
+
+======================================================================
+STEP 022  |  SIM TIME = 10.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   5 people
+  - H_F2      :  50 people
+  - H_F3      :  45 people
+  - R101_F1   :   0 people
+  - R201_F2   :  40 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=12.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=11.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=11.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=11.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 100/300 (33.3%)
+======================================================================
+
+======================================================================
+STEP 023  |  SIM TIME = 11.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   5 people
+  - H_F2      :  50 people
+  - H_F3      :  45 people
+  - R101_F1   :   0 people
+  - R201_F2   :  40 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=12.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=11.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=11.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=11.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 100/300 (33.3%)
+======================================================================
+
+======================================================================
+STEP 024  |  SIM TIME = 11.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F2      :  55 people
+  - H_F3      :  40 people
+  - R101_F1   :   0 people
+  - R201_F2   :  40 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=12.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=12.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=12.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F1 going H_F1 -> Exit_A (ETA=12.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 110/300 (36.7%)
+======================================================================
+
+======================================================================
+STEP 025  |  SIM TIME = 12.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F2      :  65 people
+  - H_F3      :  40 people
+  - R101_F1   :   0 people
+  - R201_F2   :  30 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=12.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=12.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F1 going H_F1 -> Exit_A (ETA=12.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 110/300 (36.7%)
+======================================================================
+
+======================================================================
+STEP 026  |  SIM TIME = 12.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F2      :  70 people
+  - H_F3      :  35 people
+  - R101_F1   :   0 people
+  - R201_F2   :  30 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=13.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=13.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 115/300 (38.3%)
+======================================================================
+
+======================================================================
+STEP 027  |  SIM TIME = 13.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F2      :  70 people
+  - H_F3      :  35 people
+  - R101_F1   :   0 people
+  - R201_F2   :  30 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=13.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=13.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 115/300 (38.3%)
+======================================================================
+
+======================================================================
+STEP 028  |  SIM TIME = 13.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F2      :  75 people
+  - H_F3      :  30 people
+  - R101_F1   :   0 people
+  - R201_F2   :  30 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=14.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=14.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=14.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 115/300 (38.3%)
+======================================================================
+
+======================================================================
+STEP 029  |  SIM TIME = 14.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F2      :  75 people
+  - H_F3      :  30 people
+  - R101_F1   :   0 people
+  - R201_F2   :  20 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=14.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=14.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=14.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=16.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=18.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=18.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=15.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 115/300 (38.3%)
+======================================================================
+
+======================================================================
+STEP 030  |  SIM TIME = 14.5 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   5 people
+  - H_F2      :  75 people
+  - H_F3      :  25 people
+  - R101_F1   :   0 people
+  - R201_F2   :  20 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=16.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=18.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=18.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F1 going H_F1 -> Exit_A (ETA=15.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=15.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=15.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=18.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=18.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+
+Saved so far: 115/300 (38.3%)
+======================================================================
+
+======================================================================
+STEP 031  |  SIM TIME = 15.0 minutes
+======================================================================
+People at nodes:
+  - H_F1      :   0 people
+  - H_F2      :  75 people
+  - H_F3      :  25 people
+  - R101_F1   :   0 people
+  - R201_F2   :  20 people
+  - R301_F3   :   0 people
+  - Stairs_F1_F2:   0 people
+  - Stairs_F2_F3:   0 people
+
+People in transit:
+  -  10 from R201_F2 going R201_F2 -> H_F2 (ETA=16.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['R201_F2', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=18.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -  10 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=18.0, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F3 going H_F3 -> Stairs_F2_F3 (ETA=15.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F3', 'Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F2_F3 going Stairs_F2_F3 -> H_F2 (ETA=15.5, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F2_F3', 'H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F2 going H_F2 -> Stairs_F1_F2 (ETA=18.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F2', 'Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from Stairs_F1_F2 going Stairs_F1_F2 -> H_F1 (ETA=18.5, speed=4.0x, alg=Floyd–Warshall)
+      full route to exit: ['Stairs_F1_F2', 'H_F1', 'Exit_A']
+  -   5 from H_F1 going H_F1 -> Exit_A (ETA=16.0, speed=1.0x, alg=Floyd–Warshall)
+      full route to exit: ['H_F1', 'Exit_A']
+
+Saved so far: 125/300 (41.7%)
+======================================================================
+[t=15.5] Time limit reached.
+
