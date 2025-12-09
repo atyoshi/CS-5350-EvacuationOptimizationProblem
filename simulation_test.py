@@ -110,7 +110,7 @@ def get_fw_route(start, exits, dist, nxt):
     return best_d, route
 
 
-# -------------------- Dijkstra (greedy, congestion-aware) ---------------------
+# -------------------- Dijkstra (greedy) ---------------------
 
 def dijkstra_shortest_path(graph, start, exits, edge_usage):
     """
@@ -163,7 +163,7 @@ def dijkstra_shortest_path(graph, start, exits, edge_usage):
     return float('inf'), []
 
 
-# ------------------------ Logging helpers -------------------------------------
+# ------------------------ Logging -------------------------------------
 
 def log(msg, verbose, log_lines):
     if verbose:
@@ -174,7 +174,6 @@ def log(msg, verbose, log_lines):
 def detail_log(msg, verbose):
     if verbose:
         print(msg)
-
 
 # ------------------------ Simulation display helper ---------------------------
 
@@ -291,10 +290,8 @@ def EvacuationOptimization(graph, groups, exits,
                             log(f"[t={t:.1f}] Target reached with {saved} evacuees.",
                                 verbose, log_lines)
                         if stop_on_target:
-                            remaining = sum(
-                                g['pop'] for g in pop_state.values()
-                                if isinstance(g, dict)
-                            )
+                            # Remaining = total initial evacuees - saved so far
+                            remaining = total_pop - saved
                             log(f"[t={t:.1f}] Stopping after reaching target.\n",
                                 verbose, log_lines)
                             if show_steps:
@@ -406,10 +403,8 @@ def EvacuationOptimization(graph, groups, exits,
 
         t += 0.5
 
-    remaining = sum(
-        g['pop'] for g in pop_state.values()
-        if isinstance(g, dict)
-    )
+    # FINAL: remaining = total initial evacuees - saved 
+    remaining = total_pop - saved
 
     return {
         "Total_Evacuees_Saved": saved,
@@ -484,7 +479,6 @@ def append_report_to_file(filename, scenario_name, results, total_pop, cpu_time_
 
         f.write("\n")
 
-
 # ---------------------------------- main --------------------------------------
 
 if __name__ == "__main__":
@@ -525,30 +519,31 @@ if __name__ == "__main__":
         cpu_fw
     )
 
+    # If you want to also run Dijkstra, uncomment this block:
+    """
+    print("\n================= DIJKSTRA (time-limit comparison) =================")
+    start_dj = time.perf_counter()
+    res_dj = EvacuationOptimization(
+        building_graph,
+        starting_groups,
+        exit_points,
+        time_limit=time_limit,
+        target_evacuees=None,
+        stop_on_target=False,
+        verbose=True,
+        routing_mode='dijkstra',
+        show_steps=True
+    )
+    end_dj = time.perf_counter()
+    cpu_dj = (end_dj - start_dj) * 1000.0
 
-     # ===================== DIJKSTRA (time-limit) =====================
-    # print("\n================= DIJKSTRA (time-limit comparison) =================")
-    # start_fw = time.perf_counter()
-    # res_fw = EvacuationOptimization(
-    #     building_graph,
-    #     starting_groups,
-    #     exit_points,
-    #     time_limit=time_limit,
-    #     target_evacuees=None,
-    #     stop_on_target=False,
-    #     verbose=True,         # show detailed events on console
-    #     routing_mode='dijkstra',
-    #     show_steps=True       # record STEP snapshots into log
-    # )
-    # end_fw = time.perf_counter()
-    # cpu_fw = (end_fw - start_fw) * 1000.0
+    print_scenario_report("Time-Limit Scenario (Dijkstra)", res_dj, total_pop, cpu_dj)
 
-    # print_scenario_report("Time-Limit Scenario (DIJKSTRA)", res_fw, total_pop, cpu_fw)
-
-    # append_report_to_file(
-    #     report_file,
-    #     "Time-Limit Scenario (DIJKSTRA)",
-    #     res_fw,
-    #     total_pop,
-    #     cpu_fw
-    # )
+    append_report_to_file(
+        report_file,
+        "Time-Limit Scenario (Dijkstra)",
+        res_dj,
+        total_pop,
+        cpu_dj
+    )
+    """
